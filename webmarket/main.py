@@ -20,6 +20,13 @@ class MainHandler(webapp2.RequestHandler):
         self.response.write(MAIN_PAGE_HTML)
 
 
+class AdicionarProdutoHandler(webapp2.RequestHandler):
+    def post(self):
+        produto = self.request.get('descricao')        
+        self.response.write('Você adicionou: ')
+        self.response.write('<strong>%s</strong>' % produto)
+
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    ('/add', AdicionarProdutoHandler)
 ], debug=True)
