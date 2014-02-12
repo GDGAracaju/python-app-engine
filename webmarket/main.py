@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from google.appengine.ext import ndb
 import webapp2
 
 MAIN_PAGE_HTML = """\
@@ -15,6 +16,10 @@ MAIN_PAGE_HTML = """\
 </html>
 """
 
+class Produto(ndb.Model):
+    descricao = ndb.StringProperty()
+
+
 class MainHandler(webapp2.RequestHandler):
     def get(self):
         self.response.write(MAIN_PAGE_HTML)
@@ -22,9 +27,11 @@ class MainHandler(webapp2.RequestHandler):
 
 class AdicionarProdutoHandler(webapp2.RequestHandler):
     def post(self):
-        produto = self.request.get('descricao')        
+        produto = Produto(parent=ndb.Key('Produto', 'webmarket'))
+        produto.descricao = self.request.get('descricao')        
+        produto.put()
         self.response.write('Você adicionou: ')
-        self.response.write('<strong>%s</strong>' % produto)
+        self.response.write('<strong>%s</strong>' % produto.descricao)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
