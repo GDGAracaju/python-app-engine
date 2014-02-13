@@ -1,23 +1,16 @@
 # coding: utf-8
+import os
 
 from google.appengine.ext import ndb
+
 import webapp2
+import jinja2
 
-MAIN_PAGE_HTML_HEADER = """\
-<html>
-  <body>
-    <h1>App Engine WebMarket</h1>
-    <h2>Adicionar produto</h2>
-    <form action="/add" method="post">
-      <div><label for="descricao">Descrição</label> <input type="text" name="descricao"></div>
-      <div><input type="submit" value="Adicionar"></div>
-    </form>
-"""
-
-MAIN_PAGE_HTML_FOOTER = """\
-  </body>
-</html>
-"""
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True
+)
 
 class Produto(ndb.Model):
     descricao = ndb.StringProperty()
@@ -25,17 +18,12 @@ class Produto(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write(MAIN_PAGE_HTML_HEADER)
-        
         produtos_query = Produto.query(ancestor=ndb.Key('Produto', 'webmarket'))
         produtos = produtos_query.fetch(10)
         
-        self.response.write('<ul>')
-        for produto in produtos:
-            self.response.write('<li>%s</li>' % produto.descricao)
-        self.response.write('</ul>')
-
-        self.response.write(MAIN_PAGE_HTML_FOOTER)
+        valores_template = {'produtos': produtos}
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(valores_template))
 
 
 class AdicionarProdutoHandler(webapp2.RequestHandler):

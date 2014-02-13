@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+    <title>App Engine WebMarket</title>
+</head>
+<body>
+    <h1>App Engine WebMarket</h1>
+    <h2>Adicionar produto</h2>
+    <form action="/add" method="post">
+      <div><label for="descricao">Descrição</label> <input type="text" name="descricao"></div>
+      <div><input type="submit" value="Adicionar"></div>
+    </form>
+    <ul>
+        {% for produto in produtos %}
+        <li>{{ produto.descricao }}</li> 
+        {% endfor %}
+    </ul>
+</body>
+</html>
