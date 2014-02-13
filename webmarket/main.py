@@ -19,7 +19,7 @@ class Produto(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        produtos_query = Produto.query(ancestor=ndb.Key('Produto', 'webmarket'))
+        produtos_query = Produto.query(ancestor=ndb.Key('Catalogo', 'webmarket'))
         produtos = produtos_query.fetch(10)
 
         user = users.get_current_user()
@@ -42,7 +42,7 @@ class MainHandler(webapp2.RequestHandler):
 
 class AdicionarProdutoHandler(webapp2.RequestHandler):
     def post(self):
-        produto = Produto(parent=ndb.Key('Produto', 'webmarket'))
+        produto = Produto(parent=ndb.Key('Catalogo', 'webmarket'))
         produto.descricao = self.request.get('descricao')        
         produto.put()
         self.redirect('/')
