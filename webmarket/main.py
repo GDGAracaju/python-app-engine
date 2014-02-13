@@ -3,7 +3,7 @@
 from google.appengine.ext import ndb
 import webapp2
 
-MAIN_PAGE_HTML = """\
+MAIN_PAGE_HTML_HEADER = """\
 <html>
   <body>
     <h1>App Engine WebMarket</h1>
@@ -12,6 +12,9 @@ MAIN_PAGE_HTML = """\
       <div><label for="descricao">Descrição</label> <input type="text" name="descricao"></div>
       <div><input type="submit" value="Adicionar"></div>
     </form>
+"""
+
+MAIN_PAGE_HTML_FOOTER = """\
   </body>
 </html>
 """
@@ -22,7 +25,17 @@ class Produto(ndb.Model):
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.write(MAIN_PAGE_HTML)
+        self.response.write(MAIN_PAGE_HTML_HEADER)
+        
+        produtos_query = Produto.query(ancestor=ndb.Key('Produto', 'webmarket'))
+        produtos = produtos_query.fetch(10)
+        
+        self.response.write('<ul>')
+        for produto in produtos:
+            self.response.write('<li>%s</li>' % produto.descricao)
+        self.response.write('</ul>')
+
+        self.response.write(MAIN_PAGE_HTML_FOOTER)
 
 
 class AdicionarProdutoHandler(webapp2.RequestHandler):
