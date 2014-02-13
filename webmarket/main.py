@@ -43,8 +43,7 @@ class AdicionarProdutoHandler(webapp2.RequestHandler):
         produto = Produto(parent=ndb.Key('Produto', 'webmarket'))
         produto.descricao = self.request.get('descricao')        
         produto.put()
-        self.response.write('Você adicionou: ')
-        self.response.write('<strong>%s</strong>' % produto.descricao)
+        self.redirect('/')
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
